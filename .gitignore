@@ -1,0 +1,9 @@
+*.py[cod]
+parameters_443.py
+
+# Applications ignore
+applications/transcriptstudio
+applications/*/databases
+applications/*/cache
+applications/*/sessions
+applications/*/errors
