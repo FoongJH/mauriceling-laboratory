@@ -1,0 +1,86 @@
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+  <title>Maurice Ling's Laboratory</title>
+  <meta name="GENERATOR" content="NeoOffice 2.1  (Unix)">
+  <meta name="AUTHOR" content="Maurice Ling">
+  <meta name="CREATED" content="20071113;22094900">
+  <meta name="CHANGEDBY" content="Maurice Ling">
+  <meta name="CHANGED" content="20071113;22241900">
+  <meta name="description" content="This is the virtual laboratory of Maurice Ling. I am a molecular biologist/computer scientist/
+  			bioinformaticist all rolled into one. This website contains descriptions of my research work 
+  			and personal life. My research work is in the area of knowledge configuration - bring order to 
+  			a chaos of information and knowledge resources for more efficient utility.">
+  <meta name="keywords" content="bioinformatics,knowledge configuration,Python programming,web2py">
+  <LINK REV="made" href="mailto:mauriceling@acm.org">
+  <META NAME="ROBOTS" CONTENT="ALL">
+</head>
+
+<html>
+    <table border="0" cellpadding="10" cellspacing="0" height="740" width="800">
+    <tbody>
+    <tr>
+      <td height="60" valign="top">
+        <big>Maurice Ling's Laboratory</big>
+        <hr></td>
+    </tr>
+    <tr>
+      <td valign="top" width="700">
+        <p>Welcome to my virtual laboratory web-enabled application site.</p>
+        
+        <p><b>Summary of research interest:</b> My research interest lies in 
+        the interdisciplinary area of biology, computer science, and statistics - 
+        currently known as bioinformatics - looking at how can computer (information) 
+        science and statistics help us unravel the mysteries of biology. On the 
+        biological side, I am interested in genomics (DNA fingerprinting, gene pool 
+        evolution and differentiation), transcriptomics (which genes are expressed 
+        at what conditions and at what levels) and interactomics (how are these gene 
+        products interacting in different conditions). On the computer science side 
+        of the game, I am engrossed with effective management and use of biological 
+        resource which includes published manuscripts. Quoting from a senior academic, 
+        I believe that much of science has been deductionist (breaking down into 
+        constituent components and studying a single component in extreme detail 
+        which manifested in the "one-gene-one-thesis" approach) and maybe we have 
+        enough components to re-build systems towards our initial goal of biological 
+        science - what is life and how it works? In this aspect, will it be possible 
+        to "re-design" or "re-build" a cell from the set of proteins that we have?</p>
+        
+        <p>My <a href="http://maurice.vodien.com/portfolio/index.html">professional 
+        portfolio</a> is parked within my <a href="http://maurice.vodien.com">personal 
+        website</a>.</p>
+        
+       <p><b>Here is a list of tools that had been developed as part of my work:</b></p>
+       <li>
+       <il>NotaLogger: Notarization Code Generator and Logging Service</il>
+           <blockquote>
+           A common challenge to examine notarized (signed and dated) records is the trust that the 
+           date is accurate (not a backdate); hence, heavy responsibility will lie on the notarizer. 
+           NotaLogger reduces this responsibility by generating a random code (known as a notarization 
+           code), which can be appended to the notarization. The time and purpose for generating such 
+           a notarization code will be logged in the database; thus, acting as a third-party counter-
+           signing of a notarization.<br>
+           You may proceed by either 
+               <a href="http://{{=request.env.http_host}}/notalogger/default/index">
+           generating a new notarization code</a> or 
+               <a href="http://{{=request.env.http_host}}/notalogger/default/search">
+           searching for details pertaining to an existing notarization code</a>.
+           </blockquote>
+       </li>
+       <li>
+       <il>BioDBCat: A Catalogue of Published Biological and Biomedical Databases</il>
+           <blockquote>
+           BioDBCat is an effort to catalog published biological and biomedical databases on an annual basis. 
+           This project was started in 2013 by Maurice Ling and Koh Yong Zher to get a feel of the number and 
+           types of biological databases published within the year. As this effort goes on, it seems to be a 
+           potential contribution to the scientific community to have such a catalogue; hence, BioDBCat was born.
+           At the same time, we are also interested to see the half-life of published databases as most journals 
+           only require the published database to be online for around 2 years.<br>
+           Please proceed to the 
+               <a href="http://{{=request.env.http_host}}/biodbcat/default/index">
+                   catalogue's main page</a> to register/login and start browsing</a>.
+           </blockquote>
+       </li>
+      </td>
+    </tr>
+    </tbody>
+    </table>
+</html>
