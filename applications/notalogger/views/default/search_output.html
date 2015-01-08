@@ -1,0 +1,20 @@
+<h1>NotaLogger: Notarization Code Generator and Logging Service</h1>
+<br>
+[ <a href="http://{{=request.env.http_host}}/{{=request.application}}/default/index">
+Generate More Code</a> ]
+[ <a href="http://{{=request.env.http_host}}/{{=request.application}}/default/search">
+Search Existing Notarization Code</a> ]
+<br>
+<h3>Number of notarization codes found: {{=results.count}}</h3>
+{{for r in results.result:}}
+    Notarization Code: {{=r.notarizecode}}<br>
+    Name: {{=r.name}}<br>
+    Personal Identifier: {{=r.pidentifier}}<br>
+    Email Address: {{=r.email}}<br>
+    Usage: {{=r.usage}}<br>
+    Comments: {{=r.comments}}<br>
+    Date Time Server: {{=r.datetimeserver}}<br>
+    UTC Time: {{=r.utc}}<br>
+    Number of Seconds since Epoch: {{=r.seconds_since_epoch}}<br>
+    <br>
+{{pass}}

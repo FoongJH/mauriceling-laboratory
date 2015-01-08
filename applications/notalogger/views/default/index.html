@@ -1,0 +1,17 @@
+<h1>NotaLogger: Notarization Code Generator and Logging Service</h1>
+<br>
+[ <a href="http://{{=request.env.http_host}}/{{=request.application}}/default/search">
+Search Existing Notarization Code</a> ]<br>
+<br>
+<b>A common challenge to examine notarized (signed and dated) records is the trust that the date is accurate (not a backdate); hence, heavy responsibility will lie on the notarizer. NotaLogger reduces this responsibility by generating a random code (known as a notarization code), which can be appended to the notarization. The time and purpose for generating such a notarization code will be logged in the database; thus, acting as a third-party counter-signing of a notarization.</b><br>
+<br>
+Please fill in the following to identify your records:<br>
+<br>
+1. Name - Name to identify yourself. This will be used to search notarization records. <b>This field is required</b><br>
+2. Personal Identifier - Some additional identifiers, such as organization name, etc.<br>
+3. Email Address - Please provide an email address.<br>
+4. Code Length - The length of notarization code to generate. A minimum length of 5 will be generated. <b>This field is required</b><br>
+5. Usage - Description where this notarization code is used. For example, signing record book volume 5. <b>This field is required</b><br>
+6. Other Comments - Any additional comments.<br>
+<br>
+{{=BEAUTIFY(form)}}

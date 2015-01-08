@@ -1,0 +1,12 @@
+<h1>NotaLogger: Notarization Code Generator and Logging Service</h1>
+<br>
+[ <a href="http://{{=request.env.http_host}}/{{=request.application}}/default/index">
+Generate New Code</a> ]<br>
+<br>
+<br>
+This form allows you to search for details of a notarization code, either in full or part of it. However, you need to input at least 5 consecutive characters of the code to search.<br>
+In addition, we will like to know the purpose of performing this search, which will be logged as usage.<br>
+<b>Both fields are needed.</b><br>
+If more than 50 results are available, only the first 50 will be shown and there is no guarantee that your notarization code is included. In this case, please use the full notarization code.<br>
+<br>
+{{=BEAUTIFY(form)}}
