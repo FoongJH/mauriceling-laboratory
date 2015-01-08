@@ -1,3 +1,4 @@
+*.bak
 *.py[cod]
 parameters_443.py
 
