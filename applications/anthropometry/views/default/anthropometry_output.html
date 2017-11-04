@@ -1,0 +1,147 @@
+<h1>Metabolic and Physiological Parameter Estimations from Anthropometric Measurements</h1>
+<b>Input Data:</b><br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Gender: <b>{{=results.gender}}</b><br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Height: <b>{{=results.height}}</b> cm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Weight: <b>{{=results.weight}}</b> kg<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Neck Circumference: <b>{{=results.neck}}</b> cm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Forearm Circumference: <b>{{=results.forearm}}</b> cm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Wrist Circumference: <b>{{=results.wrist}}</b> cm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Waist Circumference: <b>{{=results.waist}}</b> cm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Hip Circumference: <b>{{=results.hip}}</b> cm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Thigh Circumference: <b>{{=results.thigh}}</b> cm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Calf Circumference: <b>{{=results.calf}}</b> cm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Chest Fold: <b>{{=results.chest}}</b> mm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Abdominal Fold: <b>{{=results.abdominal}}</b> mm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Thigh Fold: <b>{{=results.thigh_fold}}</b> mm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Tricep Fold: <b>{{=results.tricep}}</b> mm<br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Suprailiac Fold: <b>{{=results.suprailiac}}</b> mm<br>
+<br>
+
+<b>Body Fat Estimation (Circumference):</b><br>
+{{if 'USNavy_BF' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+US Navy Method: <b>{{=results.USNavy_BF}} %</b><br>
+{{pass}}
+{{if 'YMCA_BF' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Behnke and Wilmore (YMCA) Method: <b>{{=results.YMCA_BF}} %</b><br>
+{{pass}}
+{{if 'mYMCA_BF' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Modified YMCA Method: <b>{{=results.mYMCA_BF}} %</b><br>
+{{pass}}
+{{if 'CovertBailey_BF' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Covert Bailey Method: <b>{{=results.CovertBailey_BF}} %</b><br>
+{{pass}}
+{{if 'PenroseNelsonFisher_BF' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Penrose, Nelson, and Fisher Method: <b>{{=results.PenroseNelsonFisher_BF}} %</b><br>
+{{pass}}
+{{if 'BehnkeWilmore_C' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Behnke and Wilmore Circumference Method: <b>{{=results.BehnkeWilmore_C}} %</b><br>
+{{pass}}
+{{if 'BFfromBMI' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+BMI Estimation Method: <b>{{=results.BFfromBMI}} %</b><br>
+{{pass}}
+<br>
+
+<b>Body Fat Estimation (Skin Fold):</b><br>
+{{if 'Pollock3' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Jackson and Pollock 3 Site Method: <b>{{=results.Pollock3}} %</b><br>
+{{pass}}
+{{if 'Pollock3G' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Jackson and Pollock 3 Site with Girth Method: <b>{{=results.Pollock3G}} %</b><br>
+{{pass}}
+{{if 'Pollock4' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Jackson and Pollock 4 Site Method: <b>{{=results.Pollock4}} %</b><br>
+{{pass}}
+{{if 'BehnkeWilmore_S' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Behnke and Wilmore Skin Fold Method: <b>{{=results.BehnkeWilmore_S}} %</b><br>
+{{pass}}
+<br>
+
+<b>Body Composition Estimation:</b><br>
+{{if 'skinfold_bf' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Average Percent Body Fat by Skin Folds: <b>{{=results.skinfold_bf}} %</b><br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Average Estimated Fat Mass by Skin Folds: <b>{{=results.sf_fat_mass}} kg</b><br>
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Average Estimated Lean Mass by Skin Folds: <b>{{=results.sf_lean_mass}} kg</b><br>
+{{pass}}
+<br>
+
+<b>Basal Metabolic Rate Estimation:</b><br>
+{{if 'HarrisBenedictBMR' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Harris - Benedict (1919) Method: <b>{{=results.HarrisBenedictBMR}}</b> Calories per day<br>
+{{pass}}
+{{if 'KleiberBMR' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Kleiber's (1932) Law: <b>{{=results.KleiberBMR}}</b> Calories per day<br>
+{{pass}}
+{{if 'RozaShizgalBMR' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Roza -Shizgal (1984) Method: <b>{{=results.RozaShizgalBMR}}</b> Calories per day<br>
+{{pass}}
+{{if 'MifflinStJeorBMR' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Mifflin - St Jeor (1990) Method: <b>{{=results.MifflinStJeorBMR}}</b> Calories per day<br>
+{{pass}}
+<br>
+
+<b>Body Mass Index:</b><br>
+{{if 'BMI' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Body Mass Index (BMI): <b>{{=results.BMI}}</b> kg/m<sup>2</sup><br>
+{{pass}}
+{{if 'Ponderal' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Ponderal Index: <b>{{=results.Ponderal}}</b> kg/m<sup>3</sup><br>
+{{pass}}
+<br>
+
+<b>Ideal Weight:</b><br>
+{{if 'Robinson_LW' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+J. D. Robinson Formula (1983): <b>{{=results.Robinson_LW}}</b> kg<br>
+{{pass}}
+{{if 'Miller_LW' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+D. R. Miller Formula (1983): <b>{{=results.Miller_LW}}</b> kg<br>
+{{pass}}
+{{if 'Hamwi_LW' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+G. J. Hamwi Formula (1964): <b>{{=results.Hamwi_LW}}</b> kg<br>
+{{pass}}
+{{if 'Devine_LW' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+B. J. Devine Formula (1974): <b>{{=results.Devine_LW}}</b> kg<br>
+{{pass}}
+{{if 'BMI_LW' in results.method:}}
+&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp
+Healthy BMI recommendation: <b>{{=results.BMI_LW[0]}}</b> kg to <b>{{=results.BMI_LW[1]}}</b> kg<br>
+{{pass}}
+<br>
