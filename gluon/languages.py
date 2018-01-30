@@ -61,7 +61,13 @@ PY_STRING_LITERAL_RE = r'(?<=[^\w]T\()(?P<name>'\
     + r"(?:'(?:[^'\\]|\\.)*')|" + r'(?:"""(?:[^"]|"{1,2}(?!"))*""")|'\
     + r'(?:"(?:[^"\\]|\\.)*"))'
 
+PY_M_STRING_LITERAL_RE = r'(?<=[^\w]T\.M\()(?P<name>'\
+    + r"[uU]?[rR]?(?:'''(?:[^']|'{1,2}(?!'))*''')|"\
+    + r"(?:'(?:[^'\\]|\\.)*')|" + r'(?:"""(?:[^"]|"{1,2}(?!"))*""")|'\
+    + r'(?:"(?:[^"\\]|\\.)*"))'
+
 regex_translate = re.compile(PY_STRING_LITERAL_RE, re.DOTALL)
+regex_translate_m = re.compile(PY_M_STRING_LITERAL_RE, re.DOTALL)
 regex_param = re.compile(r'{(?P<s>.+?)}')
 
 # pattern for a valid accept_language
@@ -75,10 +81,12 @@ regex_plural_tuple = re.compile(
     '^{(?P<w>[^[\]()]+)(?:\[(?P<i>\d+)\])?}$')  # %%{word[index]} or %%{word}
 regex_plural_file = re.compile('^plural-[a-zA-Z]{2}(-[a-zA-Z]{2})?\.py$')
 
+
 def is_writable():
     """ returns True if and only if the filesystem is writable """
     from gluon.settings import global_settings
     return not global_settings.web2py_runtime_gae
+
 
 def safe_eval(text):
     if text.strip():
@@ -314,8 +322,10 @@ def write_plural_dict(filename, contents):
         if fp:
             fp.close()
 
-def sort_function(x,y):
+
+def sort_function(x, y):
     return cmp(unicode(x, 'utf-8').lower(), unicode(y, 'utf-8').lower())
+
 
 def write_dict(filename, contents):
     if '__corrupted__' in contents:
@@ -324,8 +334,8 @@ def write_dict(filename, contents):
     try:
         fp = LockedFile(filename, 'w')
         fp.write('# -*- coding: utf-8 -*-\n{\n')
-        for key in sorted(contents, sort_function):                          
-            fp.write('%s: %s,\n' % (repr(Utf8(key)), 
+        for key in sorted(contents, sort_function):
+            fp.write('%s: %s,\n' % (repr(Utf8(key)),
                                     repr(Utf8(contents[key]))))
         fp.write('}\n')
     except (IOError, OSError):
@@ -432,10 +442,12 @@ class lazyT(object):
             return lazyT(self)
         return lazyT(self.m, symbols, self.T, self.f, self.t, self.M)
 
+
 def pickle_lazyT(c):
     return str, (c.xml(),)
 
 copy_reg.pickle(lazyT, pickle_lazyT)
+
 
 class translator(object):
     """
@@ -461,7 +473,7 @@ class translator(object):
         self.langpath = langpath
         self.http_accept_language = http_accept_language
         # filled in self.force():
-        #------------------------
+        # ------------------------
         # self.cache
         # self.accepted_language
         # self.language_file
@@ -472,9 +484,9 @@ class translator(object):
         # self.plural_file
         # self.plural_dict
         # self.requested_languages
-        #----------------------------------------
+        # ----------------------------------------
         # filled in self.set_current_languages():
-        #----------------------------------------
+        # ----------------------------------------
         # self.default_language_file
         # self.default_t
         # self.current_languages
@@ -484,6 +496,7 @@ class translator(object):
         self.filter = markmin
         self.ftag = 'markmin'
         self.ns = None
+        self.is_writable = True
 
     def get_possible_languages_info(self, lang=None):
         """
@@ -557,18 +570,19 @@ class translator(object):
         self.force(self.http_accept_language)
 
     def plural(self, word, n):
-        """ Gets plural form of word for number *n*
-            invoked from T()/T.M() in `%%{}` tag
+        """
+        Gets plural form of word for number *n*
+        invoked from T()/T.M() in `%%{}` tag
 
-            Args:
-                word (str): word in singular
-                n (numeric): number plural form created for
+        Note:
+            "word" MUST be defined in current language (T.accepted_language)
 
-            Returns:
-                word (str): word in appropriate singular/plural form
+        Args:
+            word (str): word in singular
+            n (numeric): number plural form created for
 
-            Note:
-                "word" MUST be defined in current language (T.accepted_language)
+        Returns:
+            word (str): word in appropriate singular/plural form
 
         """
         if int(n) == 1:
@@ -590,7 +604,7 @@ class translator(object):
                     form = self.construct_plural_form(word, id)
                     forms[id - 1] = form
                     self.plural_dict[word] = forms
-                    if is_writable() and self.plural_file:
+                    if self.is_writable and is_writable() and self.plural_file:
                         write_plural_dict(self.plural_file,
                                           self.plural_dict)
                     return form
@@ -721,7 +735,7 @@ class translator(object):
         try:
             otherT = self.otherTs[index]
         except KeyError:
-            otherT = self.otherTs[index] = translator(self.langpath, \
+            otherT = self.otherTs[index] = translator(self.langpath,
                                                       self.http_accept_language)
             if language:
                 otherT.force(language)
@@ -801,7 +815,7 @@ class translator(object):
         # guess translation same as original
         self.t[key] = mt = self.default_t.get(key, message)
         # update language file for latter translation
-        if is_writable() and \
+        if self.is_writable and is_writable() and \
                 self.language_file != self.default_language_file:
             write_dict(self.language_file, self.t)
         return regex_backslash.sub(
@@ -952,6 +966,7 @@ def findT(path, language=DEFAULT_LANGUAGE):
             + listdir(vp, '^.+\.html$', 0) + listdir(mop, '^.+\.py$', 0):
         data = read_locked(filename)
         items = regex_translate.findall(data)
+        items += regex_translate_m.findall(data)
         for item in items:
             try:
                 message = safe_eval(item)
@@ -975,6 +990,7 @@ def findT(path, language=DEFAULT_LANGUAGE):
             else sentences['!langcode!'])
     write_dict(lang_file, sentences)
 
+
 def update_all_languages(application_path):
     """
     Note:
@@ -984,6 +1000,25 @@ def update_all_languages(application_path):
     for language in oslistdir(path):
         if regex_langfile.match(language):
             findT(application_path, language[:-3])
+
+
+def update_from_langfile(target, source, force_update=False):
+    """this will update untranslated messages in target from source (where both are language files)
+    this can be used as first step when creating language file for new but very similar language
+        or if you want update your app from welcome app of newer web2py version
+        or in non-standard scenarios when you work on target and from any reason you have partial translation in source
+    Args:
+        force_update: if False existing translations remain unchanged, if True existing translations will update from source
+    """
+    src = read_dict(source)
+    sentences = read_dict(target)
+    for key in sentences:
+        val = sentences[key]
+        if not val or val == key or force_update:
+            new_val = src.get(key)
+            if new_val and new_val != val:
+                sentences[key] = new_val
+    write_dict(target, sentences)
 
 
 if __name__ == '__main__':

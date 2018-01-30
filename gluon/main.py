@@ -80,10 +80,9 @@ locale.setlocale(locale.LC_CTYPE, "C") # IMPORTANT, web2py requires locale "C"
 exists = os.path.exists
 pjoin = os.path.join
 
-logpath = abspath("logging.conf")
-if exists(logpath):
+try:
     logging.config.fileConfig(abspath("logging.conf"))
-else:
+except: # fails on GAE or when logfile is missing
     logging.basicConfig()
 logger = logging.getLogger("web2py")
 
@@ -93,11 +92,11 @@ from gluon.globals import Request, Response, Session
 from gluon.compileapp import build_environment, run_models_in, \
     run_controller_in, run_view_in
 from gluon.contenttype import contenttype
-from gluon.dal import BaseAdapter
+from pydal.base import BaseAdapter
 from gluon.validators import CRYPT
 from gluon.html import URL, xmlescape
 from gluon.utils import is_valid_ip_address, getipaddrinfo
-from gluon.rewrite import load, url_in, THREAD_LOCAL as rwthread, \
+from gluon.rewrite import load as load_routes, url_in, THREAD_LOCAL as rwthread, \
     try_rewrite_on_error, fixup_missing_path_info
 from gluon import newcron
 
@@ -126,7 +125,7 @@ except:
     if not global_settings.web2py_runtime_gae:
         logger.warn('unable to import Rocket')
 
-load()
+load_routes()
 
 HTTPS_SCHEMES = set(('https', 'HTTPS'))
 
@@ -152,8 +151,6 @@ def get_client(env):
     if not is_valid_ip_address(client):
         raise HTTP(400, "Bad Request (request.client=%s)" % client)
     return client
-
-
 
 
 def serve_controller(request, response, session):
@@ -222,15 +219,17 @@ class LazyWSGI(object):
         self.wsgi_environ = environ
         self.request = request
         self.response = response
+
     @property
     def environ(self):
-        if not hasattr(self,'_environ'):
+        if not hasattr(self, '_environ'):
             new_environ = self.wsgi_environ
             new_environ['wsgi.input'] = self.request.body
             new_environ['wsgi.version'] = 1
             self._environ = new_environ
         return self._environ
-    def start_response(self,status='200', headers=[], exec_info=None):
+
+    def start_response(self, status='200', headers=[], exec_info=None):
         """
         in controller you can use:
 
@@ -243,7 +242,8 @@ class LazyWSGI(object):
         self.response.headers = dict(headers)
         return lambda *args, **kargs: \
             self.response.write(escape=False, *args, **kargs)
-    def middleware(self,*middleware_apps):
+
+    def middleware(self, *middleware_apps):
         """
         In you controller use::
 
@@ -266,6 +266,7 @@ class LazyWSGI(object):
                 return app(self.environ, self.start_response)
             return lambda caller=caller, app=app: caller(app)
         return middleware
+
 
 def wsgibase(environ, responder):
     """
@@ -359,18 +360,21 @@ def wsgibase(environ, responder):
                     local_hosts = global_settings.local_hosts
                 client = get_client(env)
                 x_req_with = str(env.http_x_requested_with).lower()
+                cmd_opts = global_settings.cmd_options
 
                 request.update(
                     client = client,
                     folder = abspath('applications', app) + os.sep,
                     ajax = x_req_with == 'xmlhttprequest',
                     cid = env.http_web2py_component_element,
-                    is_local = env.remote_addr in local_hosts,
+                    is_local = (env.remote_addr in local_hosts and
+                                client == env.remote_addr),
+                    is_shell = False,
+                    is_scheduler = False,
                     is_https = env.wsgi_url_scheme in HTTPS_SCHEMES or \
                         request.env.http_x_forwarded_proto in HTTPS_SCHEMES \
                         or env.https == 'on'
                     )
-                request.compute_uuid()  # requires client
                 request.url = environ['PATH_INFO']
 
                 # ##################################################
@@ -418,10 +422,13 @@ def wsgibase(environ, responder):
                 # ##################################################
 
                 if env.http_cookie:
-                    try:
-                        request.cookies.load(env.http_cookie)
-                    except Cookie.CookieError, e:
-                        pass  # invalid cookies
+                    for single_cookie in env.http_cookie.split(';'):
+                        single_cookie = single_cookie.strip()
+                        if single_cookie:
+                            try:
+                                request.cookies.load(single_cookie)
+                            except Cookie.CookieError:
+                                pass  # single invalid cookie ignore
 
                 # ##################################################
                 # try load session or create new session file
@@ -449,7 +456,7 @@ def wsgibase(environ, responder):
                 if request.body:
                     request.body.close()
 
-                if hasattr(current,'request'):
+                if hasattr(current, 'request'):
 
                     # ##################################################
                     # on success, try store session in database
@@ -482,11 +489,10 @@ def wsgibase(environ, responder):
                     if request.ajax:
                         if response.flash:
                             http_response.headers['web2py-component-flash'] = \
-                                urllib2.quote(xmlescape(response.flash)\
-                                                  .replace('\n',''))
+                                urllib2.quote(xmlescape(response.flash).replace('\n', ''))
                         if response.js:
                             http_response.headers['web2py-component-command'] = \
-                                urllib2.quote(response.js.replace('\n',''))
+                                urllib2.quote(response.js.replace('\n', ''))
 
                     # ##################################################
                     # store cookies in headers
@@ -570,7 +576,7 @@ def save_password(password, port):
     if password == '<random>':
         # make up a new password
         chars = string.letters + string.digits
-        password = ''.join([random.choice(chars) for i in range(8)])
+        password = ''.join([random.choice(chars) for _ in range(8)])
         cpassword = CRYPT()(password)[0]
         print '******************* IMPORTANT!!! ************************'
         print 'your admin password is "%s"' % password
@@ -676,6 +682,7 @@ def appfactory(wsgiapp=wsgibase,
 
     return app_with_logging
 
+
 class HttpServer(object):
     """
     the web2py web server (Rocket)
@@ -725,7 +732,9 @@ class HttpServer(object):
             web2py_path = path
             global_settings.applications_parent = path
             os.chdir(path)
-            [add_path_first(p) for p in (path, abspath('site-packages'), "")]
+            load_routes()
+            for p in (path, abspath('site-packages'), ""):
+                add_path_first(p)
             if exists("logging.conf"):
                 logging.config.fileConfig("logging.conf")
 
